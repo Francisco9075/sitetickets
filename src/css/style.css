@@ -743,3 +743,22 @@ span.flatpickr-weekday,
   opacity: 0.8;
   cursor: grabbing; /* Changes the cursor to indicate dragging */
 }
+
+.bg-greymin{
+background-color: rgb(59, 59, 59);
+
+}
+.btn-lgin{
+
+  background-color: rgb(59, 59, 59);
+}
+.btn-lgin:hover{
+
+  background-color: rgb(150, 150, 150);
+}
+
+.text-lgin{
+
+  color: #f9fafb;
+  font-size: 230%;
+}
