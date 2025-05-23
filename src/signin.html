@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!--<?php
 session_start();
 $msg = "";
@@ -21,6 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>-->
 
+=======
+<!doctype html>
+>>>>>>> ff3b5a8af9b4e9eb05d03b336d74ce25311cc83b
 <html lang="en">
 
 <head>
@@ -34,14 +38,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body
   x-data="{ 
+    page: 'comingSoon', 
     'loaded': true, 
     'darkMode': false, 
     'stickyMenu': false, 
     'sidebarToggle': false, 
     'scrollTop': false,
     showError: false,
-    errorMessage: ''
+    errorMessage: '',
+    email: '',
+    password: '',
+    keepLoggedIn: false,
     
+    // Simular base de dados (substitua pela sua lógica real)
+    validCredentials: [
+      { email: 'admin@iticket.com', password: 'admin123' },
+      { email: 'user@example.com', password: 'password123' }
+    ],
+    
+    handleLogin() {
+      this.showError = false;
+      
+      // Verificar credenciais
+      const isValid = this.validCredentials.some(cred => 
+        cred.email === this.email && cred.password === this.password
+      );
+      
+      if (isValid) {
+        // Salvar informações de login
+        const loginData = {
+          email: this.email,
+          loginTime: Date.now(),
+          keepLoggedIn: this.keepLoggedIn
+        };
+        
+        if (this.keepLoggedIn) {
+          // Login permanente até logout manual
+          localStorage.setItem('userLogin', JSON.stringify(loginData));
+        } else {
+          // Login com expiração de 2 horas
+          localStorage.setItem('userLoginTemp', JSON.stringify(loginData));
+        }
+        
+        // Login bem-sucedido - redirecionar para index.html
+        window.location.href = 'index.html';
+      } else {
+        // Mostrar erro
+        this.showError = true;
+        this.errorMessage = 'Email ou password incorretos. Verifique as suas credenciais e tente novamente.';
+      }
+    },
+    
+    // Verificar se o usuário ainda está logado
+    checkLoginStatus() {
+      const permanentLogin = localStorage.getItem('userLogin');
+      const tempLogin = localStorage.getItem('userLoginTemp');
+      
+      if (permanentLogin) {
+        // Login permanente válido
+        return true;
+      }
+      
+      if (tempLogin) {
+        const loginData = JSON.parse(tempLogin);
+        const currentTime = Date.now();
+        const twoHours = 2 * 60 * 60 * 1000; // 2 horas em millisegundos
+        
+        if (currentTime - loginData.loginTime < twoHours) {
+          // Login temporário ainda válido
+          return true;
+        } else {
+          // Login expirado, remover dados
+          localStorage.removeItem('userLoginTemp');
+          return false;
+        }
+      }
+      
+      return false;
+    }
   }"
   x-init="
          darkMode = JSON.parse(localStorage.getItem('darkMode'));
